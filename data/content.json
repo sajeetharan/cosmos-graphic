@@ -1,0 +1,290 @@
+{
+  "title": "Azure Cosmos DB Learning Journey",
+  "subtitle": "An Interactive Visual Storybook",
+  "chapters": [
+    {
+      "id": "overview",
+      "title": "Getting Started with Azure Cosmos DB",
+      "icon": "🌐",
+      "color": "#0078D4",
+      "sections": [
+        {
+          "id": "cosmos-overview",
+          "title": "What is Azure Cosmos DB?",
+          "image": "assets/images/overview/cosmosdb-overview.jpg",
+          "description": "Azure Cosmos DB is Microsoft's globally distributed, multi-model database service designed for building highly responsive and scalable applications. It offers turnkey global distribution across any number of Azure regions with transparent multi-master replication. With industry-leading comprehensive SLAs covering throughput, consistency, availability, and latency, Cosmos DB ensures your applications perform optimally at any scale.",
+          "keyPoints": [
+            "Global distribution with multi-region writes",
+            "Single-digit millisecond response times",
+            "Five well-defined consistency models",
+            "Comprehensive SLAs for availability and performance",
+            "Multi-model support (Document, Key-Value, Graph, Column-family)"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/introduction"
+        },
+        {
+          "id": "choose-api",
+          "title": "Choosing the Right API",
+          "image": "assets/images/overview/cosmosdb-choose-api.jpg",
+          "description": "Azure Cosmos DB provides multiple APIs to work with your data, allowing you to choose the best fit for your application needs. The NoSQL API offers native support for JSON documents with SQL-like queries. MongoDB API provides compatibility with existing MongoDB applications. Cassandra API enables you to use Cosmos DB as a drop-in replacement for Apache Cassandra. Gremlin API supports graph database scenarios, while Table API offers a premium alternative to Azure Table Storage.",
+          "keyPoints": [
+            "NoSQL API: Native JSON with SQL queries",
+            "MongoDB API: Full MongoDB compatibility",
+            "Cassandra API: Apache Cassandra workloads",
+            "Gremlin API: Graph database operations",
+            "Table API: Enhanced Azure Table Storage"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/choose-api"
+        }
+      ]
+    },
+    {
+      "id": "nosql",
+      "title": "Azure Cosmos DB NoSQL API",
+      "icon": "📄",
+      "color": "#50E6FF",
+      "sections": [
+        {
+          "id": "nosql-overview",
+          "title": "NoSQL API Overview",
+          "image": "assets/images/nosql/cosmosdb-nosql-overview.jpg",
+          "description": "The NoSQL API in Azure Cosmos DB is designed for modern application development with native support for JSON documents. It provides a SQL-like query language that's familiar to developers while offering the flexibility and scale of a NoSQL database. The API supports automatic indexing of all properties, rich querying capabilities, and seamless integration with Azure services and popular development frameworks.",
+          "keyPoints": [
+            "Native JSON document storage",
+            "SQL-like query syntax",
+            "Automatic indexing of all properties",
+            "Support for stored procedures, triggers, and UDFs",
+            "Built-in support for hierarchical partition keys"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/"
+        },
+        {
+          "id": "nosql-compare",
+          "title": "Comparing NoSQL with Other Databases",
+          "image": "assets/images/nosql/cosmosdb-nosql-compare.jpg",
+          "description": "Understanding when to use Azure Cosmos DB NoSQL API versus traditional relational databases or other NoSQL solutions is crucial for application architecture. Cosmos DB excels in scenarios requiring global distribution, elastic scalability, and low-latency access to semi-structured or unstructured data. Unlike traditional SQL databases, it offers schema flexibility and horizontal scaling. Compared to other NoSQL databases, Cosmos DB provides comprehensive SLAs, turnkey global distribution, and multiple consistency models to choose from.",
+          "keyPoints": [
+            "Schema flexibility vs. rigid SQL schemas",
+            "Horizontal scaling vs. vertical scaling",
+            "Global distribution with multi-master writes",
+            "Multiple consistency models for fine-grained control",
+            "Comprehensive SLAs for enterprise workloads"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/compare"
+        },
+        {
+          "id": "distributed-nosql",
+          "title": "Understanding Distributed NoSQL",
+          "image": "assets/images/nosql/cosmosdb-nosql-understand-distributed.jpg",
+          "description": "Azure Cosmos DB's distributed architecture is fundamental to its ability to provide global scale and high availability. Data is automatically partitioned across multiple servers using partition keys, enabling horizontal scaling. The service replicates data across multiple Azure regions, ensuring low-latency access for users worldwide. With support for multi-region writes, applications can write data to the nearest region, reducing latency further. The system handles replica synchronization automatically while offering five consistency models to balance performance and data correctness.",
+          "keyPoints": [
+            "Automatic data partitioning for scale",
+            "Multi-region replication for availability",
+            "Multi-master writes for reduced latency",
+            "Automatic failover and conflict resolution",
+            "Transparent data synchronization across regions"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/distribute-data-globally"
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "title": "AI & Advanced Search Capabilities",
+      "icon": "🤖",
+      "color": "#8661C5",
+      "sections": [
+        {
+          "id": "ai-why",
+          "title": "Why Use Cosmos DB for AI Applications?",
+          "image": "assets/images/ai/cosmosdb-nosql-ai-why.jpg",
+          "description": "Azure Cosmos DB is uniquely positioned to serve as the database backbone for modern AI applications. Its ability to handle massive volumes of unstructured data with low latency makes it ideal for storing and retrieving embeddings, chat histories, and contextual information. The built-in vector search capabilities enable semantic similarity searches essential for RAG (Retrieval Augmented Generation) patterns. Combined with its global distribution and guaranteed performance SLAs, Cosmos DB ensures your AI applications remain responsive and available worldwide.",
+          "keyPoints": [
+            "Native vector search for embeddings",
+            "Low-latency retrieval for real-time AI responses",
+            "Global distribution for worldwide AI services",
+            "Scalable storage for massive AI datasets",
+            "Integration with Azure OpenAI and other AI services"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/vector-search"
+        },
+        {
+          "id": "vector-search",
+          "title": "Vector Search Capabilities",
+          "image": "assets/images/ai/cosmosdb-nosql-ai-vector-search.jpg",
+          "description": "Vector search in Azure Cosmos DB enables you to perform similarity searches on high-dimensional vector data, essential for AI and machine learning applications. You can store embeddings generated by models like Azure OpenAI directly alongside your business data, enabling powerful semantic search capabilities. The vector search uses advanced algorithms to quickly find the most similar vectors, making it perfect for recommendations, semantic search, image similarity, and other AI-driven features.",
+          "keyPoints": [
+            "Native support for vector embeddings",
+            "Efficient similarity search algorithms",
+            "Store vectors alongside business data",
+            "Integration with Azure OpenAI embeddings",
+            "Support for various distance metrics (cosine, euclidean, dot product)"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/vector-search"
+        },
+        {
+          "id": "hybrid-search",
+          "title": "Hybrid Search: Combining Vector and Traditional Search",
+          "image": "assets/images/ai/cosmosdb-nosql-ai-hybrid-search.jpg",
+          "description": "Hybrid search combines the semantic understanding of vector search with the precision of traditional keyword-based search. This powerful approach allows you to leverage both the contextual awareness of embeddings and the exact matching of traditional queries. In Cosmos DB, you can perform hybrid searches that find results matching specific keywords while also being semantically similar to your query, providing more relevant and comprehensive search results for your users.",
+          "keyPoints": [
+            "Combines semantic and keyword search",
+            "More accurate and relevant results",
+            "Single query for both search types",
+            "Customizable ranking and scoring",
+            "Ideal for complex search scenarios"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/hybrid-search"
+        },
+        {
+          "id": "full-text-search",
+          "title": "Full-Text Search",
+          "image": "assets/images/ai/cosmosdb-nosql-ai-full-text-search.jpg",
+          "description": "Full-text search in Azure Cosmos DB enables sophisticated text-based querying capabilities, including fuzzy matching, linguistic processing, and relevance ranking. Unlike simple string matching, full-text search understands language nuances, handles typos, and ranks results by relevance. This makes it ideal for user-facing search features where users expect intelligent, Google-like search experiences that go beyond exact matches.",
+          "keyPoints": [
+            "Fuzzy matching for typo tolerance",
+            "Linguistic analysis and stemming",
+            "Relevance-based ranking",
+            "Support for multiple languages",
+            "Complex text query operators"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/full-text-search"
+        },
+        {
+          "id": "semantic-reranker",
+          "title": "Semantic Reranker",
+          "image": "assets/images/ai/cosmosdb-nosql-ai-semantic-reranker.jpg",
+          "description": "The semantic reranker enhances search results by applying AI-powered reranking based on semantic understanding of both the query and results. After an initial search retrieves candidate results, the semantic reranker uses machine learning models to reorder them based on true semantic relevance rather than just keyword matching or vector similarity alone. This provides more accurate results that better match user intent, significantly improving the search experience.",
+          "keyPoints": [
+            "AI-powered result reranking",
+            "Improves search relevance",
+            "Understands query intent",
+            "Works with existing search results",
+            "Reduces irrelevant results"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/semantic-reranker"
+        },
+        {
+          "id": "diskann",
+          "title": "DiskANN for Efficient Vector Search",
+          "image": "assets/images/ai/cosmosdb-nosql-ai-diskann.jpg",
+          "description": "DiskANN (Disk-based Approximate Nearest Neighbor) is an advanced indexing technique that enables efficient vector search at massive scale. Unlike in-memory vector indexes that are limited by RAM, DiskANN can handle billions of vectors by intelligently using disk storage while maintaining high query performance. This makes it possible to build large-scale AI applications with comprehensive vector search capabilities without prohibitive memory costs.",
+          "keyPoints": [
+            "Handles billions of vectors efficiently",
+            "Disk-based for cost-effective scale",
+            "Maintains low query latency",
+            "Approximate nearest neighbor search",
+            "Optimized for large-scale AI applications"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/vector-search"
+        }
+      ]
+    },
+    {
+      "id": "quickstarts",
+      "title": "Quick Start Guides",
+      "icon": "🚀",
+      "color": "#00C851",
+      "sections": [
+        {
+          "id": "quickstart-dotnet",
+          "title": ".NET Quickstart",
+          "image": "assets/images/quickstarts/cosmosdb-nosql-quickstart-dotnet.jpg",
+          "description": "Get started with Azure Cosmos DB using .NET and C#. This quickstart guide walks you through creating your first Cosmos DB account, database, and container using the Azure Cosmos DB .NET SDK. Learn how to perform CRUD operations, query data using LINQ or SQL syntax, and implement best practices for connection management and error handling. The .NET SDK provides strong typing, async/await support, and seamless integration with ASP.NET Core applications.",
+          "keyPoints": [
+            "Use the Microsoft.Azure.Cosmos NuGet package",
+            "Create CosmosClient with singleton pattern",
+            "Perform CRUD operations with strong typing",
+            "Query data using LINQ or SQL",
+            "Implement retry policies and error handling"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-dotnet"
+        },
+        {
+          "id": "quickstart-java",
+          "title": "Java Quickstart",
+          "image": "assets/images/quickstarts/cosmosdb-nosql-quickstart-java.jpg",
+          "description": "Build your first Azure Cosmos DB application using Java. This guide demonstrates how to use the Azure Cosmos DB Java SDK v4 to connect to Cosmos DB, create resources, and perform database operations. Learn about async operations with reactor patterns, implementing efficient connection pooling, and handling partition keys effectively. The Java SDK provides excellent performance and is ideal for Spring Boot and enterprise Java applications.",
+          "keyPoints": [
+            "Use azure-cosmos dependency",
+            "Leverage reactive programming patterns",
+            "Implement connection pooling",
+            "Handle partition keys efficiently",
+            "Integration with Spring Data Cosmos"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-java"
+        },
+        {
+          "id": "quickstart-python",
+          "title": "Python Quickstart",
+          "image": "assets/images/quickstarts/cosmosdb-nosql-quickstart-python.jpg",
+          "description": "Dive into Azure Cosmos DB with Python using the azure-cosmos SDK. This quickstart shows you how to connect to Cosmos DB, create databases and containers, and perform operations using Pythonic patterns. Perfect for data science workflows, machine learning pipelines, and web applications built with Flask or FastAPI. Learn how to handle asynchronous operations, implement proper error handling, and optimize your queries for performance.",
+          "keyPoints": [
+            "Install azure-cosmos package via pip",
+            "Use async/await for better performance",
+            "Work with JSON documents naturally",
+            "Implement proper error handling",
+            "Ideal for ML and data science workloads"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-python"
+        },
+        {
+          "id": "quickstart-javascript",
+          "title": "JavaScript/Node.js Quickstart",
+          "image": "assets/images/quickstarts/cosmosdb-nosql-quickstart-js.jpg",
+          "description": "Start building with Azure Cosmos DB in JavaScript and Node.js. This guide covers using the @azure/cosmos npm package to create a connection, manage databases and containers, and perform CRUD operations. Learn how to leverage async/await patterns, handle promises effectively, and integrate Cosmos DB with Express.js or Next.js applications. The JavaScript SDK provides excellent TypeScript support and is perfect for full-stack JavaScript applications.",
+          "keyPoints": [
+            "Install @azure/cosmos via npm",
+            "Use async/await for cleaner code",
+            "Full TypeScript support available",
+            "Integration with Node.js frameworks",
+            "Efficient bulk operations support"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-nodejs"
+        },
+        {
+          "id": "quickstart-typescript",
+          "title": "TypeScript Quickstart",
+          "image": "assets/images/quickstarts/cosmosdb-nosql-quickstart-ts.jpg",
+          "description": "Leverage TypeScript's strong typing with Azure Cosmos DB for type-safe database operations. This quickstart demonstrates how to use the @azure/cosmos SDK with TypeScript to build robust applications with compile-time type checking. Learn how to define interfaces for your documents, use generics for type-safe queries, and implement proper error handling with typed exceptions. Ideal for enterprise applications requiring strong type guarantees.",
+          "keyPoints": [
+            "Full TypeScript type definitions included",
+            "Define interfaces for your documents",
+            "Type-safe query operations",
+            "Compile-time error detection",
+            "Better IDE intellisense support"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-nodejs"
+        },
+        {
+          "id": "quickstart-go",
+          "title": "Go Quickstart",
+          "image": "assets/images/quickstarts/cosmosdb-nosql-quickstart-go.jpg",
+          "description": "Build high-performance applications with Azure Cosmos DB and Go. This quickstart covers using the Azure SDK for Go to interact with Cosmos DB, leveraging Go's concurrency features for optimal performance. Learn how to handle contexts properly, implement retry logic, and use goroutines for concurrent operations. The Go SDK is perfect for microservices, CLI tools, and high-throughput applications where performance is critical.",
+          "keyPoints": [
+            "Use github.com/Azure/azure-sdk-for-go",
+            "Leverage Go's concurrency features",
+            "Proper context handling",
+            "Efficient connection management",
+            "Ideal for microservices and high-performance apps"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-go"
+        },
+        {
+          "id": "quickstart-rust",
+          "title": "Rust Quickstart",
+          "image": "assets/images/quickstarts/cosmosdb-nosql-quickstart-rust.jpg",
+          "description": "Experience the power of Azure Cosmos DB with Rust's safety guarantees and performance. This guide shows you how to use the azure_data_cosmos crate to build memory-safe, high-performance applications. Learn about Rust's ownership model in the context of database operations, async/await patterns with tokio, and how to handle errors using Result types. Perfect for systems programming, performance-critical services, and applications requiring memory safety.",
+          "keyPoints": [
+            "Memory safety with Rust's ownership",
+            "High-performance async operations",
+            "Type-safe error handling with Result",
+            "Zero-cost abstractions",
+            "Ideal for systems programming"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-rust"
+        }
+      ]
+    }
+  ]
+}

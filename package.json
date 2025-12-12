@@ -1,0 +1,27 @@
+{
+  "name": "cosmos-db-visual-storybook",
+  "version": "1.0.0",
+  "description": "Interactive visual storybook for learning Azure Cosmos DB",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8000 -o",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "azure",
+    "cosmos-db",
+    "database",
+    "education",
+    "infographics",
+    "learning",
+    "nosql",
+    "visual-learning"
+  ],
+  "author": "Azure Cosmos DB Learning",
+  "license": "Educational",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR-USERNAME/cosmos-graphic"
+  },
+  "homepage": "https://YOUR-USERNAME.github.io/cosmos-graphic/"
+}
