@@ -122,8 +122,8 @@ body {
 }
 
 .logo-image {
-    width: 250px;
-    height: 250px;
+    width: 300px;
+    height: auto;
     filter: drop-shadow(0 10px 30px rgba(80, 230, 255, 0.3));
 }
 
@@ -344,8 +344,8 @@ body {
 }
 
 .nav-logo {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: auto;
     transition: transform var(--transition-base);
 }
 
