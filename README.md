@@ -50,7 +50,7 @@ An interactive, visually stunning website for learning Azure Cosmos DB through i
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/YOUR-USERNAME/cosmos-graphic.git
+git clone https://github.com/sajeetharan/cosmos-graphic.git
 cd cosmos-graphic
 ```
 
@@ -79,7 +79,7 @@ npx http-server
 3. Navigate to "Pages" section
 4. Under "Source", select the branch you want to deploy (usually `main`)
 5. Click "Save"
-6. Your site will be available at `https://YOUR-USERNAME.github.io/cosmos-graphic/`
+5. Your site will be available at `https://sajeetharan.github.io/cosmos-graphic/`
 
 ## 📁 Project Structure
 
