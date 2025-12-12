@@ -371,6 +371,18 @@ function scrollToContent() {
     }
 }
 
+function scrollToSection(sectionId) {
+    const sectionElement = document.getElementById(sectionId);
+    if (sectionElement) {
+        const navHeight = document.querySelector('.sticky-nav')?.offsetHeight || 0;
+        const targetPosition = sectionElement.offsetTop - navHeight - 20;
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+    }
+}
+
 // ===================================
 // Progress Bar
 // ===================================
