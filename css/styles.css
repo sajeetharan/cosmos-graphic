@@ -876,6 +876,16 @@ body {
     color: var(--primary-color);
 }
 
+.github-link {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+.github-link:hover {
+    color: var(--secondary-color) !important;
+}
+
 .footer-note {
     font-size: 0.875rem;
     color: var(--text-muted);
