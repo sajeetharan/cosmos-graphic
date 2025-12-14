@@ -726,7 +726,7 @@ function setupSidebar() {
     const sidebar = document.getElementById('sidebar');
     
     if (menuToggle) {
-        menuToggle.addEventListener('click', openSidebar);
+        menuToggle.addEventListener('click', toggleSidebar);
     }
     
     if (sidebarClose) {
@@ -739,6 +739,15 @@ function setupSidebar() {
     
     // Update active section on scroll
     window.addEventListener('scroll', updateActiveSidebarSection);
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && sidebar.classList.contains('closed')) {
+        openSidebar();
+    } else {
+        closeSidebar();
+    }
 }
 
 function openSidebar() {

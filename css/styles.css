@@ -477,7 +477,7 @@ body {
     position: fixed;
     top: var(--spacing-md);
     left: var(--spacing-md);
-    z-index: 1000;
+    z-index: 1001;
     background: var(--surface);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
@@ -526,6 +526,7 @@ body:has(.sidebar.closed) .main-content {
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-2xl) var(--spacing-lg);
+    padding-top: calc(var(--spacing-2xl) + 60px);
 }
 
 /* ===================================   Featured Showcase Section
