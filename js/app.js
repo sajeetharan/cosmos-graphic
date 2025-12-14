@@ -143,6 +143,7 @@ function createChapterElement(chapter) {
 function createSectionElement(section, color) {
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'section-card';
+    sectionDiv.id = section.id;
     sectionDiv.onclick = () => openModal(section);
     
     sectionDiv.innerHTML = `
@@ -426,12 +427,18 @@ function scrollToContent() {
 function scrollToSection(sectionId) {
     const sectionElement = document.getElementById(sectionId);
     if (sectionElement) {
-        const navHeight = document.querySelector('.sticky-nav')?.offsetHeight || 0;
-        const targetPosition = sectionElement.offsetTop - navHeight - 20;
+        const offset = 100;
+        const targetPosition = sectionElement.offsetTop - offset;
         window.scrollTo({
             top: targetPosition,
             behavior: 'smooth'
         });
+        
+        // Highlight the section briefly
+        sectionElement.style.boxShadow = '0 0 0 3px var(--primary-color)';
+        setTimeout(() => {
+            sectionElement.style.boxShadow = '';
+        }, 1500);
     }
 }
 
