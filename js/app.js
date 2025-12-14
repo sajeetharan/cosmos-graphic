@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupImageProtection();
     updateProgressBar();
     setupSidebar();
+    setupMobileCollapsible();
 });
 
 // ===================================
@@ -799,6 +800,70 @@ console.log(
     '%cFor official documentation, visit: https://learn.microsoft.com/azure/cosmos-db/',
     'font-size: 12px; color: #B8B8D1;'
 );
+
+// ===================================
+// Mobile Collapsible Content
+// ===================================
+function setupMobileCollapsible() {
+    const isMobile = () => window.innerWidth <= 768;
+    
+    function updateCardStates() {
+        const sectionCards = document.querySelectorAll('.section-card');
+        
+        if (isMobile()) {
+            sectionCards.forEach(card => {
+                // Set collapsed state by default on mobile
+                if (!card.classList.contains('mobile-expanded')) {
+                    card.classList.add('mobile-collapsed');
+                }
+                
+                // Remove the modal click and add toggle behavior
+                card.onclick = (e) => {
+                    e.stopPropagation();
+                    
+                    // Toggle this card
+                    if (card.classList.contains('mobile-collapsed')) {
+                        card.classList.remove('mobile-collapsed');
+                        card.classList.add('mobile-expanded');
+                    } else {
+                        card.classList.remove('mobile-expanded');
+                        card.classList.add('mobile-collapsed');
+                    }
+                };
+            });
+        } else {
+            // Desktop: remove mobile classes and restore modal behavior
+            sectionCards.forEach((card, index) => {
+                card.classList.remove('mobile-collapsed', 'mobile-expanded');
+                
+                // Restore modal functionality
+                const sectionId = card.id;
+                const section = findSectionById(sectionId);
+                if (section) {
+                    card.onclick = () => openModal(section);
+                }
+            });
+        }
+    }
+    
+    function findSectionById(sectionId) {
+        for (const chapter of contentData.chapters) {
+            const section = chapter.sections.find(s => s.id === sectionId);
+            if (section) return section;
+        }
+        return null;
+    }
+    
+    // Initial setup
+    updateCardStates();
+    
+    // Update on resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(updateCardStates, 250);
+    });
+}
 
 // ===================================
 // Export for potential module use

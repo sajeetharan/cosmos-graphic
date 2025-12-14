@@ -789,6 +789,20 @@ body {
     transition: all var(--transition-base);
     cursor: pointer;
     margin-bottom: var(--spacing-xl);
+    position: relative;
+}
+
+.section-card.mobile-collapsed .section-content {
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.section-card.mobile-expanded .section-content {
+    max-height: 2000px;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    transition: all 0.4s ease;
 }
 
 .section-card:hover {
@@ -1284,11 +1298,41 @@ body {
     }
     
     .section-image {
-        height: 300px;
+        height: 450px;
+    }
+    
+    .section-card {
+        margin-bottom: var(--spacing-md);
     }
     
     .section-content {
         padding: var(--spacing-md);
+    }
+    
+    .section-card.mobile-collapsed .section-image {
+        height: 500px;
+    }
+    
+    .section-card.mobile-collapsed::after {
+        content: 'Tap to view details';
+        position: absolute;
+        bottom: var(--spacing-md);
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 120, 212, 0.9);
+        color: white;
+        padding: var(--spacing-xs) var(--spacing-md);
+        border-radius: var(--radius-sm);
+        font-size: 0.875rem;
+        font-weight: 600;
+        pointer-events: none;
+        z-index: 10;
+        animation: pulseButton 2s infinite;
+    }
+    
+    @keyframes pulseButton {
+        0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+        50% { opacity: 0.8; transform: translateX(-50%) scale(1.05); }
     }
     
     .nav-container {
