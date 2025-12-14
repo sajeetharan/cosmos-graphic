@@ -425,6 +425,29 @@ function scrollToContent() {
     }
 }
 
+function startJourney() {
+    // Close sidebar
+    closeSidebar();
+    
+    // Get the first section from the first chapter
+    if (contentData && contentData.chapters && contentData.chapters.length > 0) {
+        const firstChapter = contentData.chapters[0];
+        if (firstChapter.sections && firstChapter.sections.length > 0) {
+            const firstSection = firstChapter.sections[0];
+            
+            // Scroll to the first section
+            setTimeout(() => {
+                scrollToSection(firstSection.id);
+            }, 300);
+            
+            // Open the modal with first section after a brief delay
+            setTimeout(() => {
+                openModal(firstSection);
+            }, 800);
+        }
+    }
+}
+
 function scrollToSection(sectionId) {
     const sectionElement = document.getElementById(sectionId);
     if (sectionElement) {

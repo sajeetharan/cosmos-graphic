@@ -488,6 +488,8 @@ body {
     transition: all var(--transition-fast);
     align-items: center;
     justify-content: center;
+    width: 48px;
+    height: 48px;
 }
 
 .menu-toggle:hover {
@@ -760,6 +762,7 @@ body:has(.sidebar.closed) .main-content {
     text-align: left;
     margin-bottom: var(--spacing-xl);
     padding: var(--spacing-lg);
+    padding-left: 80px;
     background: linear-gradient(135deg, rgba(0, 120, 212, 0.08) 0%, rgba(80, 230, 255, 0.04) 100%);
     border-radius: var(--radius-md);
     border-left: 4px solid var(--primary-color);
@@ -1369,6 +1372,10 @@ body:has(.sidebar.closed) .main-content {
     
     .section-image {
         height: 300px;
+    }
+    
+    .chapter-header {
+        padding-left: var(--spacing-md);
     }
     
     .chapter-title {
