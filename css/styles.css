@@ -59,7 +59,7 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 100px;
+    scroll-padding-top: 120px;
 }
 
 html {
@@ -525,8 +525,7 @@ body:has(.sidebar.closed) .main-content {
 .content-wrapper {
     max-width: 1200px;
     margin: 0 auto;
-    padding: var(--spacing-2xl) var(--spacing-lg);
-    padding-top: calc(var(--spacing-2xl) + 60px);
+    padding: var(--spacing-lg);
 }
 
 /* ===================================   Featured Showcase Section
@@ -765,6 +764,10 @@ body:has(.sidebar.closed) .main-content {
     border-radius: var(--radius-md);
     border-left: 4px solid var(--primary-color);
     position: relative;
+}
+
+.chapter:first-child .chapter-header {
+    margin-top: 80px;
 }
 
 .chapter-icon {
