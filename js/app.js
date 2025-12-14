@@ -15,11 +15,13 @@ let scrollTop = 0;
 // ===================================
 document.addEventListener('DOMContentLoaded', async () => {
     await loadContent();
+    renderSidebarNavigation();
     renderNavigation();
     renderContent();
     setupEventListeners();
     setupImageProtection();
     updateProgressBar();
+    setupSidebar();
 });
 
 // ===================================
@@ -38,8 +40,57 @@ async function loadContent() {
 // ===================================
 // Render Navigation
 // ===================================
+function renderSidebarNavigation() {
+    const sidebarNav = document.getElementById('sidebarNav');
+    if (!sidebarNav) return;
+    
+    contentData.chapters.forEach((chapter, index) => {
+        const chapterDiv = document.createElement('div');
+        chapterDiv.className = 'sidebar-chapter';
+        
+        const headerButton = document.createElement('button');
+        headerButton.className = 'sidebar-chapter-header';
+        headerButton.innerHTML = `
+            <span class="sidebar-chapter-icon">${chapter.icon}</span>
+            <span class="sidebar-chapter-title">${chapter.title}</span>
+            <svg class="sidebar-chapter-toggle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+            </svg>
+        `;
+        
+        headerButton.addEventListener('click', () => {
+            chapterDiv.classList.toggle('collapsed');
+        });
+        
+        const sectionsDiv = document.createElement('div');
+        sectionsDiv.className = 'sidebar-sections';
+        
+        chapter.sections.forEach(section => {
+            const link = document.createElement('a');
+            link.href = `#${section.id}`;
+            link.className = 'sidebar-section';
+            link.textContent = section.title;
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                scrollToSection(section.id);
+                closeSidebar();
+                
+                // Update active state
+                document.querySelectorAll('.sidebar-section').forEach(s => s.classList.remove('active'));
+                link.classList.add('active');
+            });
+            sectionsDiv.appendChild(link);
+        });
+        
+        chapterDiv.appendChild(headerButton);
+        chapterDiv.appendChild(sectionsDiv);
+        sidebarNav.appendChild(chapterDiv);
+    });
+}
+
 function renderNavigation() {
     const navChapters = document.getElementById('navChapters');
+    if (!navChapters) return;
     
     contentData.chapters.forEach((chapter, index) => {
         const chip = document.createElement('a');
@@ -59,10 +110,11 @@ function renderNavigation() {
 // ===================================
 function renderContent() {
     const mainContent = document.getElementById('mainContent');
+    const contentWrapper = mainContent.querySelector('.content-wrapper') || mainContent;
     
     contentData.chapters.forEach(chapter => {
         const chapterElement = createChapterElement(chapter);
-        mainContent.appendChild(chapterElement);
+        contentWrapper.appendChild(chapterElement);
     });
 }
 
@@ -654,6 +706,75 @@ function getTouchDistance(touches) {
     const dx = touches[0].pageX - touches[1].pageX;
     const dy = touches[0].pageY - touches[1].pageY;
     return Math.sqrt(dx * dx + dy * dy);
+}
+
+// ===================================
+// Sidebar Functions
+// ===================================
+function setupSidebar() {
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebarClose = document.getElementById('sidebarClose');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebar = document.getElementById('sidebar');
+    
+    if (menuToggle) {
+        menuToggle.addEventListener('click', openSidebar);
+    }
+    
+    if (sidebarClose) {
+        sidebarClose.addEventListener('click', closeSidebar);
+    }
+    
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+    
+    // Update active section on scroll
+    window.addEventListener('scroll', updateActiveSidebarSection);
+}
+
+function openSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    if (sidebar) sidebar.classList.add('open');
+    if (overlay) overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function updateActiveSidebarSection() {
+    const sections = document.querySelectorAll('.section-card');
+    const sidebarLinks = document.querySelectorAll('.sidebar-section');
+    
+    let currentSection = null;
+    const scrollPosition = window.scrollY + 200;
+    
+    sections.forEach((section) => {
+        const sectionTop = section.offsetTop;
+        const sectionBottom = sectionTop + section.offsetHeight;
+        
+        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+            currentSection = section.querySelector('.section-canvas')?.dataset.image;
+        }
+    });
+    
+    if (currentSection) {
+        sidebarLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').includes(currentSection)) {
+                link.classList.add('active');
+            }
+        });
+    }
 }
 
 // ===================================
