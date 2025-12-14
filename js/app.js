@@ -825,6 +825,8 @@ function setupMobileCollapsible() {
                     if (card.classList.contains('mobile-collapsed')) {
                         card.classList.remove('mobile-collapsed');
                         card.classList.add('mobile-expanded');
+                        // Close sidebar to show full content
+                        closeSidebar();
                     } else {
                         card.classList.remove('mobile-expanded');
                         card.classList.add('mobile-collapsed');
