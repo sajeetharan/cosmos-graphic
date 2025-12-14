@@ -745,16 +745,26 @@ function openSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
     
-    if (sidebar) sidebar.classList.add('open');
+    if (sidebar) {
+        sidebar.classList.remove('closed');
+        sidebar.classList.add('open');
+    }
     if (overlay) overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    
+    // Only lock body scroll on mobile
+    if (window.innerWidth <= 768) {
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 function closeSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
     
-    if (sidebar) sidebar.classList.remove('open');
+    if (sidebar) {
+        sidebar.classList.remove('open');
+        sidebar.classList.add('closed');
+    }
     if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
 }
@@ -834,15 +844,18 @@ function setupMobileCollapsible() {
                 };
             });
         } else {
-            // Desktop: remove mobile classes and restore modal behavior
+            // Desktop: remove mobile classes and restore modal behavior with sidebar close
             sectionCards.forEach((card, index) => {
                 card.classList.remove('mobile-collapsed', 'mobile-expanded');
                 
-                // Restore modal functionality
+                // Restore modal functionality and close sidebar
                 const sectionId = card.id;
                 const section = findSectionById(sectionId);
                 if (section) {
-                    card.onclick = () => openModal(section);
+                    card.onclick = () => {
+                        closeSidebar();
+                        openModal(section);
+                    };
                 }
             });
         }
