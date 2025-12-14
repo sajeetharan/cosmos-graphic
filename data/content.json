@@ -285,6 +285,282 @@
           "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/quickstart-rust"
         }
       ]
+    },
+    {
+      "id": "core-concepts",
+      "title": "Core Concepts & Architecture",
+      "icon": "⚙️",
+      "color": "#FF6B35",
+      "sections": [
+        {
+          "id": "resource-model",
+          "title": "Resource Model Overview",
+          "image": "assets/images/core-concepts/resource-model-ovierview.jpg",
+          "description": "Azure Cosmos DB's resource model is hierarchical, starting with the database account at the top level. Under each account, you can create multiple databases, and within each database, you can create containers. Containers are the fundamental unit of scalability and store your items (documents). This clear hierarchy allows for organized data management and efficient resource allocation across your applications.",
+          "keyPoints": [
+            "Hierarchical structure: Account → Database → Container → Items",
+            "Containers are the unit of scale and throughput",
+            "Items are JSON documents stored in containers",
+            "Built-in partitioning at the container level",
+            "Independent scaling for each container"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/resource-model"
+        },
+        {
+          "id": "request-units",
+          "title": "Understanding Request Units (RUs)",
+          "image": "assets/images/core-concepts/request-units.jpg",
+          "description": "Request Units (RUs) are the currency of throughput in Azure Cosmos DB. They represent a normalized measure of computational resources required to perform database operations. A simple read of a 1KB document costs 1 RU, while writes and queries consume more based on complexity. Understanding RUs helps you provision the right amount of throughput and optimize costs for your workload.",
+          "keyPoints": [
+            "Normalized measure of compute, memory, and IOPS",
+            "1 RU = cost to read 1KB item by ID",
+            "Writes and complex queries cost more RUs",
+            "Provision RUs at container or database level",
+            "Monitor and optimize RU consumption"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/request-units"
+        },
+        {
+          "id": "consistency-levels",
+          "title": "Consistency Levels",
+          "image": "assets/images/core-concepts/consistency-levels.jpg",
+          "description": "Azure Cosmos DB offers five well-defined consistency levels that provide a spectrum of choices between strong consistency and eventual consistency. Choose Strong for linearizability, Bounded Staleness for consistent prefix with bounded lag, Session for consistent reads within a session, Consistent Prefix for order-preserving reads, or Eventual for maximum availability and lowest latency. Each level provides different trade-offs between consistency, availability, latency, and throughput.",
+          "keyPoints": [
+            "Strong: Linearizability guarantee",
+            "Bounded Staleness: Consistent with bounded lag",
+            "Session: Consistent within client session",
+            "Consistent Prefix: Reads never see out-of-order writes",
+            "Eventual: Highest availability and performance"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/consistency-levels"
+        },
+        {
+          "id": "data-modeling",
+          "title": "Data Modeling Best Practices",
+          "image": "assets/images/core-concepts/data-modelling.jpg",
+          "description": "Effective data modeling in Cosmos DB requires thinking differently than in relational databases. Design your data model around your access patterns and queries. Consider denormalization to reduce cross-partition queries, use composite keys for complex scenarios, and leverage hierarchical partition keys for better distribution. Proper modeling ensures optimal performance, cost-efficiency, and scalability for your applications.",
+          "keyPoints": [
+            "Model data based on access patterns",
+            "Denormalize for query efficiency",
+            "Use hierarchical partition keys",
+            "Minimize cross-partition queries",
+            "Balance between normalization and performance"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/modeling-data"
+        },
+        {
+          "id": "provisioned-throughput-container",
+          "title": "Provisioned Throughput (Container Level)",
+          "image": "assets/images/core-concepts/provisioned-throughput-container.jpg",
+          "description": "Provisioning throughput at the container level provides dedicated RU/s exclusively for that container. This approach is ideal when you have containers with predictable workloads or varying throughput requirements. Each container gets its allocated throughput, ensuring performance isolation and preventing noisy neighbor issues between containers.",
+          "keyPoints": [
+            "Dedicated RU/s per container",
+            "Performance isolation between containers",
+            "Ideal for predictable workloads",
+            "Can be scaled independently",
+            "Minimum 400 RU/s per container"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/set-throughput"
+        },
+        {
+          "id": "provisioned-throughput-database",
+          "title": "Provisioned Throughput (Database Level)",
+          "image": "assets/images/core-concepts/provisioned-throughput-database.jpg",
+          "description": "Database-level provisioned throughput allows you to share RU/s across multiple containers within a database. This is cost-effective when you have many containers with varying and unpredictable traffic patterns. Containers within the database share the allocated throughput, with automatic load balancing handled by Cosmos DB.",
+          "keyPoints": [
+            "Shared RU/s across containers",
+            "Cost-effective for multiple containers",
+            "Automatic load balancing",
+            "Supports up to 25 containers",
+            "Minimum 400 RU/s for the database"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/set-throughput"
+        },
+        {
+          "id": "autoscale-throughput",
+          "title": "Autoscale Throughput",
+          "image": "assets/images/core-concepts/autoscale-throughput.jpg",
+          "description": "Autoscale automatically adjusts your provisioned throughput based on actual usage, scaling between 10% of your maximum RU/s and your specified maximum. This eliminates the need for manual capacity planning and ensures you only pay for the throughput you use. Perfect for workloads with variable or unpredictable traffic patterns.",
+          "keyPoints": [
+            "Automatic scaling based on usage",
+            "Scales from 10% to 100% of max RU/s",
+            "Pay only for actual usage",
+            "Instant scaling with no downtime",
+            "Ideal for variable workloads"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/provision-throughput-autoscale"
+        },
+        {
+          "id": "serverless",
+          "title": "Serverless Mode",
+          "image": "assets/images/core-concepts/serverless.jpg",
+          "description": "Serverless mode offers a consumption-based pricing model where you only pay for the RUs consumed by your operations, with no provisioned throughput required. This is ideal for development, testing, and workloads with intermittent or unpredictable traffic. Serverless eliminates capacity planning and is perfect for getting started quickly or building event-driven applications.",
+          "keyPoints": [
+            "Pay only for RUs consumed",
+            "No capacity planning required",
+            "Ideal for dev/test and intermittent workloads",
+            "Automatic scaling on demand",
+            "No minimum throughput charges"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/serverless"
+        },
+        {
+          "id": "design-resiliency",
+          "title": "Designing Resilient Applications",
+          "image": "assets/images/core-concepts/design-resiliency-apps.jpg",
+          "description": "Building resilient applications with Cosmos DB requires implementing proper retry logic, handling transient failures, and designing for regional failovers. Use the SDK's built-in retry policies, implement circuit breakers, and configure multi-region writes for automatic failover. Proper error handling and monitoring ensure your applications remain available even during regional outages.",
+          "keyPoints": [
+            "Implement retry logic for transient failures",
+            "Use multi-region writes for high availability",
+            "Configure automatic failover policies",
+            "Monitor availability and latency metrics",
+            "Design for graceful degradation"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/high-availability"
+        },
+        {
+          "id": "design-multi-tenant",
+          "title": "Designing Multi-Tenant Applications",
+          "image": "assets/images/core-concepts/design-multi-tentant-apps.jpg",
+          "description": "Multi-tenant applications in Cosmos DB require careful consideration of data isolation, performance, and cost allocation. Choose between database-per-tenant, container-per-tenant, or partition-per-tenant strategies based on your requirements. Use hierarchical partition keys to efficiently isolate tenant data while maintaining query performance and cost optimization.",
+          "keyPoints": [
+            "Multiple tenancy models available",
+            "Use partition keys for tenant isolation",
+            "Hierarchical keys for complex scenarios",
+            "Balance between isolation and cost",
+            "Monitor per-tenant metrics"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/nosql/multi-tenancy"
+        }
+      ]
+    },
+    {
+      "id": "develop-apps",
+      "title": "Develop Applications",
+      "icon": "💻",
+      "color": "#7C4DFF",
+      "sections": [
+        {
+          "id": "change-feed",
+          "title": "Change Feed",
+          "image": "assets/images/develop-apps/cosmos-changefeed.jpg",
+          "description": "Change Feed provides a persistent log of changes made to your Cosmos DB containers in the order they occur. This enables event-driven architectures, real-time analytics, and data synchronization scenarios. Use change feed to trigger Azure Functions, build materialized views, or replicate data to other systems. It's a powerful feature for building reactive applications.",
+          "keyPoints": [
+            "Persistent log of all changes",
+            "Ordered by partition key",
+            "Enables event-driven patterns",
+            "Integration with Azure Functions",
+            "Supports incremental processing"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/change-feed"
+        },
+        {
+          "id": "global-secondary-indexes",
+          "title": "Global Secondary Indexes",
+          "image": "assets/images/develop-apps/global-secondary-indexes.jpg",
+          "description": "Global secondary indexes in Cosmos DB automatically index all properties in your documents by default, enabling efficient queries without requiring schema definitions. You can customize indexing policies to exclude certain paths, include only specific properties, or configure different index types (range, spatial, composite) based on your query patterns. Proper indexing strategy balances query performance with write throughput and storage costs.",
+          "keyPoints": [
+            "Automatic indexing of all properties",
+            "Customizable indexing policies",
+            "Support for composite indexes",
+            "Spatial and full-text indexes",
+            "Optimize for query patterns"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/index-policy"
+        },
+        {
+          "id": "cosmos-emulator",
+          "title": "Cosmos DB Emulator",
+          "image": "assets/images/develop-apps/cosmos-emulator.jpg",
+          "description": "The Azure Cosmos DB Emulator provides a local environment that emulates the Cosmos DB service for development and testing purposes. It's free, runs on your local machine, and supports all Cosmos DB APIs. Use the emulator to develop and test your applications locally without creating a cloud instance, saving costs during development and enabling offline development.",
+          "keyPoints": [
+            "Free local development environment",
+            "Supports all Cosmos DB APIs",
+            "No Azure subscription required",
+            "Includes data explorer UI",
+            "Perfect for CI/CD pipelines"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/emulator"
+        },
+        {
+          "id": "vscode-extension",
+          "title": "VS Code Extension",
+          "image": "assets/images/develop-apps/cosmos-vscode-extension.jpg",
+          "description": "The Azure Cosmos DB extension for Visual Studio Code provides a rich development experience directly within your editor. Browse and manage your Cosmos DB accounts, create and query databases and containers, view and edit documents, and execute queries without leaving VS Code. The extension supports IntelliSense for queries, making development faster and more productive.",
+          "keyPoints": [
+            "Manage accounts and resources",
+            "Query and edit documents",
+            "IntelliSense for SQL queries",
+            "Integrated with Azure services",
+            "Supports all Cosmos DB APIs"
+          ],
+          "learnMoreUrl": "https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb"
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "title": "Security & Compliance",
+      "icon": "🔒",
+      "color": "#FF5252",
+      "sections": [
+        {
+          "id": "security-overview",
+          "title": "Security Overview",
+          "image": "assets/images/security/overview.jpg",
+          "description": "Azure Cosmos DB provides enterprise-grade security features including encryption at rest and in transit, network isolation with VNet and private endpoints, role-based access control (RBAC), and compliance with major standards. All data is encrypted automatically with Microsoft-managed keys, with the option to bring your own keys. Regular security audits and certifications ensure Cosmos DB meets the strictest compliance requirements.",
+          "keyPoints": [
+            "Encryption at rest and in transit",
+            "Network isolation with VNets",
+            "Private endpoint support",
+            "Compliance with major standards",
+            "Automatic security updates"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/database-security"
+        },
+        {
+          "id": "rbac",
+          "title": "Role-Based Access Control (RBAC)",
+          "image": "assets/images/security/user-rbac.jpg",
+          "description": "Azure Cosmos DB supports Azure RBAC for fine-grained access control to your database resources. Assign built-in roles like Cosmos DB Account Reader, Data Contributor, or create custom roles with specific permissions. RBAC enables secure, auditable access management integrated with Azure Active Directory, eliminating the need to manage connection strings and keys directly.",
+          "keyPoints": [
+            "Integration with Azure AD",
+            "Built-in and custom roles",
+            "Fine-grained permissions",
+            "Audit access with Azure Monitor",
+            "No need to manage keys manually"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/role-based-access-control"
+        },
+        {
+          "id": "key-rotation",
+          "title": "Key Rotation",
+          "image": "assets/images/security/key-rotation.jpg",
+          "description": "Regular key rotation is a security best practice that Cosmos DB makes easy to implement. The service supports both primary and secondary keys, allowing you to rotate keys without application downtime. Update your applications to use the secondary key, rotate the primary key, then switch back. This ensures continuous availability while maintaining security compliance and protecting against key compromise.",
+          "keyPoints": [
+            "Primary and secondary keys available",
+            "Zero-downtime rotation process",
+            "Automated rotation with Azure Key Vault",
+            "Compliance requirement support",
+            "Audit key usage and changes"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/secure-access-to-data"
+        },
+        {
+          "id": "data-masking",
+          "title": "Dynamic Data Masking",
+          "image": "assets/images/security/ddm.jpg",
+          "description": "Dynamic data masking helps protect sensitive data by limiting exposure to non-privileged users. Configure masking rules to hide sensitive information like credit card numbers, email addresses, or personal identifiers in query results. The data remains unchanged in the database, but masked users see obfuscated values, helping you comply with privacy regulations while maintaining application functionality.",
+          "keyPoints": [
+            "Hide sensitive data from users",
+            "No changes to stored data",
+            "Built-in masking functions",
+            "Custom masking rules",
+            "Supports compliance requirements"
+          ],
+          "learnMoreUrl": "https://learn.microsoft.com/azure/cosmos-db/data-masking"
+        }
+      ]
     }
   ]
 }
