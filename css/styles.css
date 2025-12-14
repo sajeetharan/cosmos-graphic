@@ -1022,6 +1022,14 @@ body {
         align-items: center;
     }
     
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .logo-image {
+        width: 200px;
+    }
+    
     .showcase-title {
         font-size: 1.75rem;
     }
@@ -1029,6 +1037,18 @@ body {
     .showcase-grid {
         grid-template-columns: 1fr;
         gap: var(--spacing-lg);
+    }
+    
+    .showcase-image {
+        height: 180px;
+    }
+    
+    .section-image {
+        height: 300px;
+    }
+    
+    .section-content {
+        padding: var(--spacing-md);
     }
     
     .nav-container {
