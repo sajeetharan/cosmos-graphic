@@ -151,6 +151,22 @@
                 </svg>
             </button>
         </div>
+        <!-- Search Box -->
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search topics..." autocomplete="off">
+                <button class="search-clear" id="searchClear" aria-label="Clear search">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+        </div>
         <nav class="sidebar-nav" id="sidebarNav">
             <!-- Navigation will be dynamically loaded here -->
         </nav>
@@ -243,54 +259,47 @@
     <!-- Image Modal -->
     <div class="modal" id="imageModal">
         <div class="modal-backdrop" onclick="closeModal()"></div>
-        <div class="modal-content">
+        <div class="modal-content image-only">
             <button class="modal-close" onclick="closeModal()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
             </button>
-            <div class="modal-body">
-                <div class="modal-image-container" id="imageContainer">
+            <div class="modal-title-bar" id="modalTitleBar"></div>
+            <div class="modal-image-container" id="imageContainer">
+                <div class="canvas-wrapper" id="canvasWrapper">
                     <canvas id="imageCanvas"></canvas>
-                    <div class="zoom-controls">
-                        <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"/>
-                                <path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/>
-                            </svg>
-                        </button>
-                        <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"/>
-                                <path d="M21 21l-4.35-4.35M8 11h6"/>
-                            </svg>
-                        </button>
-                        <button class="zoom-btn" onclick="resetZoom()" title="Reset Zoom">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-                                <path d="M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-                                <path d="M3 21v-5h5"/>
-                            </svg>
-                        </button>
-                        <span class="zoom-level" id="zoomLevel">100%</span>
-                    </div>
                 </div>
-                <div class="modal-info">
-                    <h2 id="modalTitle"></h2>
-                    <p id="modalDescription"></p>
-                    <div class="modal-key-points" id="modalKeyPoints"></div>
-                    <a id="modalLearnMore" href="#" target="_blank" class="btn btn-primary">
-                        Learn More
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/>
                         </svg>
-                    </a>
+                    </button>
+                    <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35M8 11h6"/>
+                        </svg>
+                    </button>
+                    <button class="zoom-btn" onclick="resetZoom()" title="Reset Zoom">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                            <path d="M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                            <path d="M3 21v-5h5"/>
+                        </svg>
+                    </button>
+                    <span class="zoom-level" id="zoomLevel">100%</span>
+                </div>
+                <div class="zoom-hint" id="zoomHint">
+                    <span>🔍 Scroll to zoom • Drag to pan • Double-click to toggle</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js"></script>
+    <script src="js/app.js?v=4"></script>
 </body>
 </html>

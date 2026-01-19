@@ -9,6 +9,10 @@ let startX = 0;
 let startY = 0;
 let scrollLeft = 0;
 let scrollTop = 0;
+let searchHighlightIndex = -1;
+let searchResults = [];
+let panX = 0;
+let panY = 0;
 
 // ===================================
 // Initialize Application
@@ -23,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateProgressBar();
     setupSidebar();
     setupMobileCollapsible();
+    setupSearch();
 });
 
 // ===================================
@@ -145,7 +150,10 @@ function createSectionElement(section, color) {
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'section-card';
     sectionDiv.id = section.id;
-    sectionDiv.onclick = () => openModal(section);
+    sectionDiv.style.cursor = 'pointer';
+    sectionDiv.addEventListener('click', function(e) {
+        openModal(section);
+    });
     
     sectionDiv.innerHTML = `
         <div class="section-image">
@@ -189,9 +197,16 @@ function loadImageToCanvas(canvas, imagePath) {
     const ctx = canvas.getContext('2d');
     const img = new Image();
     
+    // Set crossOrigin to allow loading
+    img.crossOrigin = 'anonymous';
+    
     img.onload = function() {
+        // Set canvas dimensions to match image
         canvas.width = img.width;
         canvas.height = img.height;
+        
+        // Clear and draw image
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
         
         // Add semi-transparent watermark overlay
@@ -199,14 +214,19 @@ function loadImageToCanvas(canvas, imagePath) {
         ctx.font = 'bold 48px Arial';
         ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
+        ctx.save();
         ctx.translate(canvas.width / 2, canvas.height / 2);
         ctx.rotate(-45 * Math.PI / 180);
         ctx.fillText('AZURE COSMOS DB', 0, 0);
+        ctx.restore();
         ctx.globalAlpha = 1.0;
     };
     
     img.onerror = function() {
         console.error('Failed to load image:', imagePath);
+        // Set a default size for error state
+        canvas.width = 400;
+        canvas.height = 300;
         ctx.fillStyle = '#1A1A2E';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#FFFFFF';
@@ -222,32 +242,42 @@ function loadImageToCanvas(canvas, imagePath) {
 // Modal Functionality
 // ===================================
 function openModal(section) {
+    if (!section) {
+        console.error('No section provided to openModal');
+        return;
+    }
+    
     currentSectionData = section;
     const modal = document.getElementById('imageModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDescription = document.getElementById('modalDescription');
-    const modalKeyPoints = document.getElementById('modalKeyPoints');
-    const modalLearnMore = document.getElementById('modalLearnMore');
+    const modalTitleBar = document.getElementById('modalTitleBar');
     const canvas = document.getElementById('imageCanvas');
     
-    modalTitle.textContent = section.title;
-    modalDescription.textContent = section.description;
-    modalLearnMore.href = section.learnMoreUrl;
+    if (!modal) {
+        console.error('Modal element not found');
+        return;
+    }
     
-    // Render key points
-    modalKeyPoints.innerHTML = `
-        <h4>Key Points</h4>
-        <ul>
-            ${section.keyPoints.map(point => `<li>${point}</li>`).join('')}
-        </ul>
-    `;
+    // Set title in the title bar (safely)
+    if (modalTitleBar) {
+        modalTitleBar.textContent = section.title;
+    }
     
     // Load image to modal canvas
-    loadImageToCanvas(canvas, section.image);
+    if (canvas) {
+        loadImageToCanvas(canvas, section.image);
+    }
     
-    // Reset zoom
+    // Reset zoom and pan
     currentZoom = 1;
+    panX = 0;
+    panY = 0;
     updateZoomLevel();
+    
+    // Show hint
+    const hint = document.getElementById('zoomHint');
+    if (hint) {
+        hint.classList.remove('hidden');
+    }
     
     // Setup zoom and pan listeners
     setupZoomListeners();
@@ -269,18 +299,36 @@ function closeModal() {
         canvas.style.transform = 'scale(1)';
     }
     
-    // Clean up listeners
+    // Reset wrapper scroll
+    const wrapper = document.getElementById('canvasWrapper');
+    if (wrapper) {
+        wrapper.scrollLeft = 0;
+        wrapper.scrollTop = 0;
+    }
+    
+    // Reset hint
+    const hint = document.getElementById('zoomHint');
+    if (hint) {
+        hint.classList.remove('hidden');
+    }
+    
+    // Clean up document-level listeners
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+    
+    // Clean up container listeners
     const container = document.getElementById('imageContainer');
     if (container) {
         container.removeEventListener('wheel', handleWheel);
         container.removeEventListener('mousedown', handleMouseDown);
-        container.removeEventListener('mousemove', handleMouseMove);
-        container.removeEventListener('mouseup', handleMouseUp);
-        container.removeEventListener('mouseleave', handleMouseUp);
+        container.removeEventListener('dblclick', handleDoubleClick);
         container.removeEventListener('touchstart', handleTouchStart);
         container.removeEventListener('touchmove', handleTouchMove);
         container.removeEventListener('touchend', handleTouchEnd);
     }
+    
+    // Open the sidebar when modal closes
+    openSidebar();
 }
 
 // ===================================
@@ -569,30 +617,40 @@ window.addEventListener('unhandledrejection', (e) => {
 function zoomIn() {
     currentZoom = Math.min(currentZoom + 0.25, 4);
     applyZoom();
+    hideZoomHint();
 }
 
 function zoomOut() {
     currentZoom = Math.max(currentZoom - 0.25, 0.5);
     applyZoom();
+    hideZoomHint();
 }
 
 function resetZoom() {
     currentZoom = 1;
+    panX = 0;
+    panY = 0;
     applyZoom();
     
     // Reset scroll position
-    const container = document.getElementById('imageContainer');
-    if (container) {
-        container.scrollLeft = 0;
-        container.scrollTop = 0;
+    const wrapper = document.getElementById('canvasWrapper');
+    if (wrapper) {
+        wrapper.scrollLeft = 0;
+        wrapper.scrollTop = 0;
     }
 }
 
 function applyZoom() {
     const canvas = document.getElementById('imageCanvas');
     if (canvas) {
-        canvas.style.transform = `scale(${currentZoom})`;
+        canvas.style.transform = `scale(${currentZoom}) translate(${panX}px, ${panY}px)`;
         updateZoomLevel();
+        
+        // Update cursor based on zoom level
+        const container = document.getElementById('imageContainer');
+        if (container) {
+            container.style.cursor = currentZoom > 1 ? 'grab' : 'default';
+        }
     }
 }
 
@@ -603,61 +661,86 @@ function updateZoomLevel() {
     }
 }
 
+function hideZoomHint() {
+    const hint = document.getElementById('zoomHint');
+    if (hint) {
+        hint.classList.add('hidden');
+    }
+}
+
 function setupZoomListeners() {
     const container = document.getElementById('imageContainer');
-    if (!container) return;
+    const wrapper = document.getElementById('canvasWrapper');
+    if (!container || !wrapper) return;
     
     // Mouse wheel zoom
     container.addEventListener('wheel', handleWheel, { passive: false });
     
     // Pan with mouse drag
     container.addEventListener('mousedown', handleMouseDown);
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseup', handleMouseUp);
-    container.addEventListener('mouseleave', handleMouseUp);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
     
     // Touch gestures
-    let touchStartDistance = 0;
-    let initialZoom = 1;
-    
     container.addEventListener('touchstart', handleTouchStart, { passive: false });
     container.addEventListener('touchmove', handleTouchMove, { passive: false });
     container.addEventListener('touchend', handleTouchEnd);
+    
+    // Double click to zoom
+    container.addEventListener('dblclick', handleDoubleClick);
+}
+
+function handleDoubleClick(e) {
+    if (e.target.closest('.zoom-controls')) return;
+    
+    if (currentZoom === 1) {
+        currentZoom = 2;
+    } else {
+        currentZoom = 1;
+    }
+    applyZoom();
+    hideZoomHint();
 }
 
 function handleWheel(e) {
     e.preventDefault();
     
-    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+    const delta = e.deltaY > 0 ? -0.15 : 0.15;
     currentZoom = Math.max(0.5, Math.min(4, currentZoom + delta));
     applyZoom();
+    hideZoomHint();
 }
 
 function handleMouseDown(e) {
     if (e.target.closest('.zoom-controls')) return;
+    if (currentZoom <= 1) return; // Only allow dragging when zoomed in
     
     isDragging = true;
     const container = document.getElementById('imageContainer');
     container.classList.add('dragging');
+    container.style.cursor = 'grabbing';
     
-    startX = e.pageX - container.offsetLeft;
-    startY = e.pageY - container.offsetTop;
-    scrollLeft = container.scrollLeft;
-    scrollTop = container.scrollTop;
+    startX = e.clientX;
+    startY = e.clientY;
+    
+    e.preventDefault();
 }
 
 function handleMouseMove(e) {
     if (!isDragging) return;
-    e.preventDefault();
     
-    const container = document.getElementById('imageContainer');
-    const x = e.pageX - container.offsetLeft;
-    const y = e.pageY - container.offsetTop;
-    const walkX = (x - startX) * 1.5;
-    const walkY = (y - startY) * 1.5;
+    const deltaX = e.clientX - startX;
+    const deltaY = e.clientY - startY;
     
-    container.scrollLeft = scrollLeft - walkX;
-    container.scrollTop = scrollTop - walkY;
+    // Update pan position (divide by zoom to make movement feel natural)
+    panX += deltaX / currentZoom;
+    panY += deltaY / currentZoom;
+    
+    // Update start position for next move
+    startX = e.clientX;
+    startY = e.clientY;
+    
+    applyZoom();
 }
 
 function handleMouseUp() {
@@ -665,6 +748,7 @@ function handleMouseUp() {
     const container = document.getElementById('imageContainer');
     if (container) {
         container.classList.remove('dragging');
+        container.style.cursor = currentZoom > 1 ? 'grab' : 'default';
     }
 }
 
@@ -673,20 +757,19 @@ let initialZoom = 1;
 let touchStartPos = { x: 0, y: 0 };
 
 function handleTouchStart(e) {
+    hideZoomHint();
+    
     if (e.touches.length === 2) {
         // Pinch zoom
         e.preventDefault();
         touchStartDistance = getTouchDistance(e.touches);
         initialZoom = currentZoom;
-    } else if (e.touches.length === 1) {
-        // Pan
-        const container = document.getElementById('imageContainer');
+    } else if (e.touches.length === 1 && currentZoom > 1) {
+        // Pan when zoomed
         touchStartPos = {
-            x: e.touches[0].pageX,
-            y: e.touches[0].pageY
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY
         };
-        scrollLeft = container.scrollLeft;
-        scrollTop = container.scrollTop;
     }
 }
 
@@ -701,12 +784,18 @@ function handleTouchMove(e) {
     } else if (e.touches.length === 1 && currentZoom > 1) {
         // Pan when zoomed
         e.preventDefault();
-        const container = document.getElementById('imageContainer');
-        const deltaX = touchStartPos.x - e.touches[0].pageX;
-        const deltaY = touchStartPos.y - e.touches[0].pageY;
+        const deltaX = e.touches[0].clientX - touchStartPos.x;
+        const deltaY = e.touches[0].clientY - touchStartPos.y;
         
-        container.scrollLeft = scrollLeft + deltaX;
-        container.scrollTop = scrollTop + deltaY;
+        panX += deltaX / currentZoom;
+        panY += deltaY / currentZoom;
+        
+        touchStartPos = {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY
+        };
+        
+        applyZoom();
     }
 }
 
@@ -905,4 +994,233 @@ if (typeof module !== 'undefined' && module.exports) {
         closeModal,
         scrollToChapter
     };
+}
+
+// ===================================
+// Search Functionality
+// ===================================
+function setupSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const searchClear = document.getElementById('searchClear');
+    
+    if (!searchInput || !searchResults) return;
+    
+    // Debounce function for search
+    let debounceTimer;
+    const debounce = (func, delay) => {
+        return (...args) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(this, args), delay);
+        };
+    };
+    
+    // Search input handler
+    searchInput.addEventListener('input', debounce((e) => {
+        const query = e.target.value.trim();
+        if (query.length >= 2) {
+            performSearch(query);
+        } else {
+            hideSearchResults();
+        }
+    }, 200));
+    
+    // Clear button handler
+    searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        hideSearchResults();
+        searchInput.focus();
+    });
+    
+    // Keyboard navigation
+    searchInput.addEventListener('keydown', (e) => {
+        const resultsContainer = document.getElementById('searchResults');
+        const items = resultsContainer.querySelectorAll('.search-result-item');
+        
+        if (items.length === 0) return;
+        
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                searchHighlightIndex = Math.min(searchHighlightIndex + 1, items.length - 1);
+                updateSearchHighlight(items);
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                searchHighlightIndex = Math.max(searchHighlightIndex - 1, 0);
+                updateSearchHighlight(items);
+                break;
+            case 'Enter':
+                e.preventDefault();
+                if (searchHighlightIndex >= 0 && items[searchHighlightIndex]) {
+                    items[searchHighlightIndex].click();
+                } else if (items.length > 0) {
+                    items[0].click();
+                }
+                break;
+            case 'Escape':
+                hideSearchResults();
+                searchInput.blur();
+                break;
+        }
+    });
+    
+    // Close search results when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-container')) {
+            hideSearchResults();
+        }
+    });
+    
+    // Show results when focusing on input with existing query
+    searchInput.addEventListener('focus', () => {
+        const query = searchInput.value.trim();
+        if (query.length >= 2) {
+            performSearch(query);
+        }
+    });
+}
+
+function performSearch(query) {
+    const results = [];
+    const lowerQuery = query.toLowerCase();
+    
+    contentData.chapters.forEach(chapter => {
+        chapter.sections.forEach(section => {
+            const titleMatch = section.title.toLowerCase().includes(lowerQuery);
+            const descMatch = section.description.toLowerCase().includes(lowerQuery);
+            const keyPointsMatch = section.keyPoints.some(point => 
+                point.toLowerCase().includes(lowerQuery)
+            );
+            
+            if (titleMatch || descMatch || keyPointsMatch) {
+                results.push({
+                    section: section,
+                    chapter: chapter,
+                    titleMatch: titleMatch,
+                    descMatch: descMatch,
+                    keyPointsMatch: keyPointsMatch
+                });
+            }
+        });
+    });
+    
+    // Sort results: title matches first, then description, then key points
+    results.sort((a, b) => {
+        if (a.titleMatch && !b.titleMatch) return -1;
+        if (!a.titleMatch && b.titleMatch) return 1;
+        if (a.descMatch && !b.descMatch) return -1;
+        if (!a.descMatch && b.descMatch) return 1;
+        return 0;
+    });
+    
+    // Store results globally for keyboard navigation
+    window.searchResults = results;
+    searchHighlightIndex = -1;
+    
+    displaySearchResults(results, query);
+}
+
+function displaySearchResults(results, query) {
+    const searchResultsContainer = document.getElementById('searchResults');
+    
+    if (results.length === 0) {
+        searchResultsContainer.innerHTML = `
+            <div class="search-no-results">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                    <path d="M8 8l6 6M14 8l-6 6"/>
+                </svg>
+                No results found for "${escapeHtml(query)}"
+            </div>
+        `;
+        searchResultsContainer.classList.add('active');
+        return;
+    }
+    
+    const html = results.map((result, index) => {
+        const highlightedTitle = highlightMatch(result.section.title, query);
+        return `
+            <div class="search-result-item" data-section-id="${result.section.id}" data-index="${index}">
+                <div class="result-title">${highlightedTitle}</div>
+                <div class="result-chapter">
+                    <span class="result-chapter-icon">${result.chapter.icon}</span>
+                    <span>${result.chapter.title}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    searchResultsContainer.innerHTML = html;
+    searchResultsContainer.classList.add('active');
+    
+    // Add click handlers to result items
+    searchResultsContainer.querySelectorAll('.search-result-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const sectionId = item.dataset.sectionId;
+            hideSearchResults();
+            document.getElementById('searchInput').value = '';
+            
+            // Scroll to section and optionally open modal
+            scrollToSection(sectionId);
+            closeSidebar();
+            
+            // Highlight the section briefly
+            const sectionElement = document.getElementById(sectionId);
+            if (sectionElement) {
+                sectionElement.classList.add('search-highlight');
+                setTimeout(() => {
+                    sectionElement.classList.remove('search-highlight');
+                }, 2000);
+            }
+        });
+        
+        // Hover highlight
+        item.addEventListener('mouseenter', () => {
+            const items = searchResultsContainer.querySelectorAll('.search-result-item');
+            items.forEach(i => i.classList.remove('highlighted'));
+            item.classList.add('highlighted');
+            searchHighlightIndex = parseInt(item.dataset.index);
+        });
+    });
+}
+
+function highlightMatch(text, query) {
+    const lowerText = text.toLowerCase();
+    const lowerQuery = query.toLowerCase();
+    const index = lowerText.indexOf(lowerQuery);
+    
+    if (index === -1) return escapeHtml(text);
+    
+    const before = text.substring(0, index);
+    const match = text.substring(index, index + query.length);
+    const after = text.substring(index + query.length);
+    
+    return `${escapeHtml(before)}<span class="match-highlight">${escapeHtml(match)}</span>${escapeHtml(after)}`;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function updateSearchHighlight(items) {
+    items.forEach((item, index) => {
+        if (index === searchHighlightIndex) {
+            item.classList.add('highlighted');
+            item.scrollIntoView({ block: 'nearest' });
+        } else {
+            item.classList.remove('highlighted');
+        }
+    });
+}
+
+function hideSearchResults() {
+    const searchResultsContainer = document.getElementById('searchResults');
+    if (searchResultsContainer) {
+        searchResultsContainer.classList.remove('active');
+    }
+    searchHighlightIndex = -1;
 }
